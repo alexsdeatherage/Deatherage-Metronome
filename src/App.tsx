@@ -7,8 +7,25 @@ function App() {
   const [isRunning, setIsRunning] = useState(false);
   const synth = new Tone.Synth().toDestination();
 
+  const playNote = () => {
+    synth.triggerAttackRelease("C4", "8n");
+  };
+
+  const startMetronome = () => {
+    Tone.Transport.bpm.value = bpm;
+    Tone.Transport.scheduleRepeat((time) => {
+      playNote();
+    }, "4n");
+    Tone.Transport.start();
+  };
+
   const toggleMetronome = () => {
     setIsRunning(!isRunning);
+    if (!isRunning) {
+      startMetronome();
+    } else {
+      Tone.Transport.stop();
+    }
   };
 
   return (
