@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import * as Tone from 'tone';
-import './App.css';
 
 function App() {
   const [bpm, setBpm] = useState(60);
