@@ -157,112 +157,115 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
-      <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
-        <h1 className="text-4xl font-bold text-white text-center mb-8">
-          Metronome
-        </h1>
-        
-        <div className="space-y-6">
-          {/* Time Signature Selection */}
-          <div className="text-center">
-            <label className="block text-white text-lg mb-3">
-              Time Signature
-            </label>
-            <div className="flex flex-wrap justify-center gap-2">
-              {TIME_SIGNATURES.map((timeSig) => (
+    <div className="hero min-h-screen bg-gradient-to-br from-primary to-secondary">
+      <div className="hero-content text-center">
+        <div className="card bg-base-100/10 backdrop-blur-lg shadow-2xl border border-base-100/20">
+          <div className="card-body">
+            <h1 className="card-title text-4xl font-bold text-base-100 justify-center mb-8">
+              Metronome
+            </h1>
+            
+            <div className="space-y-6">
+              {/* Time Signature Selection */}
+              <div className="text-center">
+                <label className="label">
+                  <span className="label-text text-base-100 text-lg">Time Signature</span>
+                </label>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {TIME_SIGNATURES.map((timeSig) => (
+                    <button
+                      key={timeSig.label}
+                      onClick={() => handleTimeSignatureChange(timeSig)}
+                      className={`btn btn-sm ${
+                        selectedTimeSignature.label === timeSig.label
+                          ? 'btn-primary'
+                          : 'btn-outline btn-primary'
+                      }`}
+                    >
+                      {timeSig.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Beat Indicators */}
+              {isRunning && (
+                <div className="text-center">
+                  <div className="flex justify-center gap-2 mb-3">
+                    {Array.from({ length: selectedTimeSignature.beats }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`badge badge-lg ${
+                          currentBeat === i + 1
+                            ? i === 0
+                              ? 'badge-error animate-pulse'
+                              : 'badge-warning animate-pulse'
+                            : 'badge-neutral'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-base-100/70 text-sm">
+                    Beat {currentBeat} of {selectedTimeSignature.beats}
+                  </p>
+                </div>
+              )}
+              
+              {/* BPM Control */}
+              <div className="text-center">
+                <label className="label">
+                  <span className="label-text text-base-100 text-lg">Tempo (BPM)</span>
+                </label>
+                <div className="flex items-center justify-center space-x-4">
+                  <button
+                    onClick={() => handleBpmChange(Math.max(40, bpm - 1))}
+                    className="btn btn-circle btn-outline btn-primary"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={bpm}
+                    onChange={(e) => handleBpmChange(Number(e.target.value))}
+                    min="40"
+                    max="240"
+                    className="input input-bordered text-center text-2xl font-bold w-24 bg-base-100/20 text-base-100 border-base-100/20"
+                  />
+                  <button
+                    onClick={() => handleBpmChange(Math.min(240, bpm + 1))}
+                    className="btn btn-circle btn-outline btn-primary"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              
+              {/* Start/Stop Button */}
+              <div className="text-center">
                 <button
-                  key={timeSig.label}
-                  onClick={() => handleTimeSignatureChange(timeSig)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                    selectedTimeSignature.label === timeSig.label
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white/20 text-white hover:bg-white/30'
+                  onClick={toggleMetronome}
+                  className={`btn btn-lg ${
+                    isRunning
+                      ? 'btn-error'
+                      : isInitialized
+                      ? 'btn-success'
+                      : 'btn-primary'
                   }`}
                 >
-                  {timeSig.label}
+                  {!isInitialized ? 'Initialize Audio' : isRunning ? 'Stop' : 'Start'}
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Beat Indicators */}
-          {isRunning && (
-            <div className="text-center">
-              <div className="flex justify-center gap-2 mb-3">
-                {Array.from({ length: selectedTimeSignature.beats }, (_, i) => (
-                  <div
-                    key={i}
-                    className={`w-4 h-4 rounded-full transition-all duration-150 ${
-                      currentBeat === i + 1
-                        ? i === 0
-                          ? 'bg-red-500 scale-125 animate-pulse'
-                          : 'bg-yellow-400 scale-110 animate-pulse'
-                        : 'bg-white/30'
-                    }`}
-                  />
-                ))}
               </div>
-              <p className="text-white/70 text-sm">
-                Beat {currentBeat} of {selectedTimeSignature.beats}
-              </p>
-            </div>
-          )}
-          
-          {/* BPM Control */}
-          <div className="text-center">
-            <label htmlFor="bpm" className="block text-white text-lg mb-2">
-              Tempo (BPM)
-            </label>
-            <div className="flex items-center justify-center space-x-4">
-              <button
-                onClick={() => handleBpmChange(Math.max(40, bpm - 1))}
-                className="bg-white/20 hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
-              >
-                -
-              </button>
-              <input
-                id="bpm"
-                type="number"
-                value={bpm}
-                onChange={(e) => handleBpmChange(Number(e.target.value))}
-                min="40"
-                max="240"
-                className="bg-white/20 text-white text-center text-2xl font-bold rounded-lg px-4 py-2 w-24 border-none outline-none focus:ring-2 focus:ring-white/50"
-              />
-              <button
-                onClick={() => handleBpmChange(Math.min(240, bpm + 1))}
-                className="bg-white/20 hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
-              >
-                +
-              </button>
+              
+              {/* Status Display */}
+              {isRunning && (
+                <div className="text-center">
+                  <p className="text-base-100/70 text-sm">
+                    Playing {selectedTimeSignature.label} at {bpm} BPM
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-          
-          {/* Start/Stop Button */}
-          <div className="text-center">
-            <button
-              onClick={toggleMetronome}
-              className={`px-8 py-4 rounded-full text-xl font-semibold transition-all transform hover:scale-105 ${
-                isRunning
-                  ? 'bg-red-500 hover:bg-red-600 text-white'
-                  : isInitialized
-                  ? 'bg-green-500 hover:bg-green-600 text-white'
-                  : 'bg-blue-500 hover:bg-blue-600 text-white'
-              }`}
-            >
-              {!isInitialized ? 'Initialize Audio' : isRunning ? 'Stop' : 'Start'}
-            </button>
-          </div>
-          
-          {/* Status Display */}
-          {isRunning && (
-            <div className="text-center">
-              <p className="text-white/70 text-sm">
-                Playing {selectedTimeSignature.label} at {bpm} BPM
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>
