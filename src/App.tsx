@@ -280,19 +280,18 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="hero min-h-screen bg-gradient-to-br from-primary to-secondary">
+      <div className="hero min-h-screen bg-gradient-to-br from-info to-base-200">
         <div className="hero-content text-center">
-          <div className="card bg-base-100/10 backdrop-blur-lg shadow-2xl border border-base-100/20">
+          <div className="card bg-base-100 shadow-xl border border-info">
             <div className="card-body">
-              <h1 className="card-title text-4xl font-bold text-base-100 justify-center mb-8">
+              <h1 className="card-title text-4xl font-bold text-info justify-center mb-8">
                 Metronome
               </h1>
-              
               <div className="space-y-6">
                 {/* Time Signature Selection */}
                 <div className="text-center">
                   <label className="label">
-                    <span className="label-text text-base-100 text-lg">Time Signature</span>
+                    <span className="label-text text-info text-lg">Time Signature</span>
                   </label>
                   <div className="flex flex-wrap justify-center gap-2">
                     {TIME_SIGNATURES.map((timeSig) => (
@@ -301,8 +300,8 @@ function App() {
                         onClick={() => handleTimeSignatureChange(timeSig)}
                         className={`btn btn-sm ${
                           selectedTimeSignature.label === timeSig.label
-                            ? 'btn-primary'
-                            : 'btn-outline btn-primary'
+                            ? 'btn-info text-base-100'
+                            : 'btn-outline btn-info'
                         }`}
                       >
                         {timeSig.label}
@@ -322,27 +321,27 @@ function App() {
                             currentBeat === i + 1
                               ? i === 0
                                 ? 'badge-error animate-pulse'
-                                : 'badge-warning animate-pulse'
+                                : 'badge-info animate-pulse'
                               : 'badge-neutral'
                           }`}
                         />
                       ))}
                     </div>
-                    <p className="text-base-100/70 text-sm">
+                    <p className="text-info/70 text-sm">
                       Beat {currentBeat} of {selectedTimeSignature.beats}
                     </p>
                   </div>
                 )}
-                
+
                 {/* BPM Control */}
                 <div className="text-center">
                   <label className="label">
-                    <span className="label-text text-base-100 text-lg">Tempo (BPM)</span>
+                    <span className="label-text text-info text-lg">Tempo (BPM)</span>
                   </label>
                   <div className="flex items-center justify-center space-x-4">
                     <button
                       onClick={() => handleBpmChange(Math.max(40, bpm - 1))}
-                      className="btn btn-circle btn-outline btn-primary"
+                      className="btn btn-circle btn-outline btn-info"
                     >
                       -
                     </button>
@@ -352,17 +351,17 @@ function App() {
                       onChange={(e) => handleBpmChange(Number(e.target.value))}
                       min="40"
                       max="240"
-                      className="input input-bordered text-center text-2xl font-bold w-24 bg-base-100/20 text-base-100 border-base-100/20"
+                      className="input input-bordered text-center text-2xl font-bold w-24 bg-base-100 text-info border-info/40"
                     />
                     <button
                       onClick={() => handleBpmChange(Math.min(240, bpm + 1))}
-                      className="btn btn-circle btn-outline btn-primary"
+                      className="btn btn-circle btn-outline btn-info"
                     >
                       +
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Start/Stop Button */}
                 <div className="text-center">
                   <button
@@ -372,17 +371,17 @@ function App() {
                         ? 'btn-error'
                         : isInitialized
                         ? 'btn-success'
-                        : 'btn-primary'
+                        : 'btn-info'
                     }`}
                   >
                     {!isInitialized ? 'Initialize Audio' : isRunning ? 'Stop' : 'Start'}
                   </button>
                 </div>
-                
+
                 {/* Status Display */}
                 {isRunning && (
                   <div className="text-center">
-                    <p className="text-base-100/70 text-sm">
+                    <p className="text-info/70 text-sm">
                       Playing {selectedTimeSignature.label} at {bpm} BPM
                     </p>
                   </div>
